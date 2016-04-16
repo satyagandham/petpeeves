@@ -1,5 +1,4 @@
-input {
-	file {
+input { file {
 		type => "apache"
 		path => "/Users/sgandham/Downloads/jboss.log"
 		start_position => "beginning"
@@ -8,12 +7,11 @@ input {
     	  negate => true
       	  what => "previous"
 	    }
-	}
-}
+	} }
 filter {
 	grok { 
 		patterns_dir => ["./patterns"]
-		match =>  { "message" => "%{TIME:times} %{LOGLEVEL:logLevel}  %{LOG_FORMAT:dye} %{SRC_LOCATION:location} %{LINE_NUM:line} %{GREEDYDATA:msg}" }
+		match =>  { "message" => "%{TIME:times} %{LOGLEVEL:logLevel}%{VAR_SPACES}%{LOG_FORMAT:dye} %{SRC_LOCATION:location} %{LINE_NUM:line} - %{GREEDYDATA:msg}" }
 	}
 	mutate {
     	split => { "location" => "=" }
@@ -24,10 +22,9 @@ filter {
   		remove_field => [ "type" ]
     	update => [ "location", "%{[location][1]}" ]
     	update => [ "line", "%{[line][1]}" ]  		
+    	remove_field => [ "message" ]
   	}
 }
-output {
-	elasticsearch {
+output {elasticsearch {
 		hosts => ["localhost:9200"]
-	}
-}
+	}}
