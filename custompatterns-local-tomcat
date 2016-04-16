@@ -1,0 +1,5 @@
+LOG_FORMAT \[%{GREEDYDATA}\]
+JAVA_CLASSNAME ([\w]+\.)*([\w]+\$?)\w+
+SRC_LOCATION location=%{JAVA_CLASSNAME}
+LINE_NUM line=%{NUMBER}
+VAR_SPACES \s+?
